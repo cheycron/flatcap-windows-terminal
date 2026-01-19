@@ -1,8 +1,8 @@
 {
-	"name": "FlatCap",
-	"version": "1.0.0",
+	"name": "Flatcap",
+	"version": "1.1.0",
 	"minAppVersion": "1.6.1",
-	"author": "@cheycron",
+	"author": "Leonardo Anibal Chocron",
 	"authorUrl": "https://cheycron.com",
 	"fundingUrl": "https://buymeacoffee.com/cheycron"
 }
