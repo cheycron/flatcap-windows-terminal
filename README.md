@@ -5,7 +5,7 @@
 **[Flatcap](https://github.com/cheycron/flatcap-theme)** is a dark, minimalist, and eye-friendly theme meticulously crafted to provide a comfortable and focused experience.
 
 <p align="center">
-  <img src="https://github.com/cheycron/flat-cap-theme/blob/main/images/demo_windowsterminal.png?raw=true" alt="Flatcap Windows Terminal" width="100%"/>
+  <img src="images/screenshot.png" alt="Flatcap Windows Terminal" width="100%"/>
 </p>
 
 ## 🚀 How to Install
