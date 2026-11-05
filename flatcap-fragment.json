@@ -1,0 +1,50 @@
+{
+  "schemes": [
+    {
+      "name": "Flatcap Slate",
+      "background": "#191D22",
+      "foreground": "#D5DBE3",
+      "cursorColor": "#9BBFDF",
+      "selectionBackground": "#3C546B",
+      "black": "#3D4652",
+      "red": "#E2A0A5",
+      "green": "#9FC3AD",
+      "yellow": "#D8BC87",
+      "blue": "#9BBFDF",
+      "purple": "#B6AED5",
+      "cyan": "#ABC9CB",
+      "white": "#AEB8C4",
+      "brightBlack": "#A7B3C2",
+      "brightRed": "#E2A0A5",
+      "brightGreen": "#9FC3AD",
+      "brightYellow": "#D8BC87",
+      "brightBlue": "#ACCCE7",
+      "brightPurple": "#B6AED5",
+      "brightCyan": "#ABC9CB",
+      "brightWhite": "#D5DBE3"
+    },
+    {
+      "name": "Flatcap Daylight",
+      "background": "#F3F5F7",
+      "foreground": "#28313B",
+      "cursorColor": "#285D85",
+      "selectionBackground": "#C8DDF0",
+      "black": "#28313B",
+      "red": "#A43F4A",
+      "green": "#32664D",
+      "yellow": "#765319",
+      "blue": "#285D85",
+      "purple": "#68598C",
+      "cyan": "#306770",
+      "white": "#465463",
+      "brightBlack": "#536273",
+      "brightRed": "#A43F4A",
+      "brightGreen": "#32664D",
+      "brightYellow": "#765319",
+      "brightBlue": "#214F73",
+      "brightPurple": "#68598C",
+      "brightCyan": "#306770",
+      "brightWhite": "#FFFFFF"
+    }
+  ]
+}
