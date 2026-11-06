@@ -6,12 +6,13 @@
     python3 scripts/build.py --sync       # refresh src/theme.json from ../00-Flatcap, then rebuild
     python3 scripts/build.py --contrast   # print the contrast report (ANSI x background, selection, cursor)
     python3 scripts/build.py --schema F   # also validate against the official WT schema file F
-                                          # (needs the optional `jsonschema` package; see README)
+                                          # (needs the optional `jsonschema` package; see docs/mapping.md)
 
 Input  : src/theme.json, a versioned copy of the Flatcap 2.0 core (the only source of values).
 Outputs: flatcap-fragment.json   color schemes only, for Windows Terminal JSON fragment extensions
          flatcap-settings.json   color schemes + window themes, to paste into settings.json
          README.md               only the blocks between <!-- build:NAME --> markers
+         docs/mapping.md         same markers: field mapping, ANSI table, contrast tables, full JSON
 
 No hex value is written by hand in this file: every color is resolved from a Flatcap role.
 Python 3.10+, standard library only. Output is deterministic.
@@ -28,6 +29,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 THEME = ROOT / "src" / "theme.json"
 README = ROOT / "README.md"
+MAPPING_DOC = ROOT / "docs" / "mapping.md"
 UPSTREAM = (ROOT / ".." / "00-Flatcap" / "src" / "theme.json").resolve()
 SCHEMA_URL = "https://aka.ms/terminal-profiles-schema"
 
@@ -41,7 +43,7 @@ OUT_SETTINGS = ROOT / "flatcap-settings.json"
 # ---------------------------------------------------------------------------
 # Mapping tables. Roles only; hex values come from src/theme.json.
 # Windows Terminal has no selection foreground: text keeps its own color on
-# top of selectionBackground (see "Selection" in the README).
+# top of selectionBackground (see "Contrast and limitations" in docs/mapping.md).
 # ---------------------------------------------------------------------------
 
 # (scheme key, role, intent)
@@ -412,16 +414,16 @@ def md_fonts(theme: dict) -> str:
             f"Windows Terminal (1 pt = 1.333 px at 100% scale).")
 
 
-BLOCKS = {"fields": md_fields, "ansi": md_ansi, "contrast": md_contrast,
-          "snippet": md_snippet, "json": md_json, "fonts": md_fonts}
+README_BLOCKS = {"snippet": md_snippet, "fonts": md_fonts}
+DOC_BLOCKS = {"fields": md_fields, "ansi": md_ansi, "contrast": md_contrast, "json": md_json}
 
 
-def render_readme(theme: dict) -> str:
-    text = README.read_text(encoding="utf-8")
-    for name, fn in BLOCKS.items():
+def render_blocks(path: Path, blocks: dict, theme: dict) -> str:
+    text = path.read_text(encoding="utf-8")
+    for name, fn in blocks.items():
         pat = re.compile(rf"(<!-- build:{name} -->)\n.*?(<!-- /build:{name} -->)", re.S)
         if not pat.search(text):
-            raise SystemExit(f"error: README.md is missing the build:{name} markers")
+            raise SystemExit(f"error: {path.relative_to(ROOT)} is missing the build:{name} markers")
         text = pat.sub(lambda m: m.group(1) + "\n" + fn(theme) + "\n" + m.group(2), text)
     return text
 
@@ -463,15 +465,17 @@ def main() -> int:
         print("note: src/theme.json differs from ../00-Flatcap (run --sync to refresh)", file=sys.stderr)
 
     outputs = {OUT_FRAGMENT: dumps(fragment_doc(theme)), OUT_SETTINGS: dumps(settings_doc(theme)),
-               README: render_readme(theme)}
+               README: render_blocks(README, README_BLOCKS, theme),
+               MAPPING_DOC: render_blocks(MAPPING_DOC, DOC_BLOCKS, theme)}
     stale = []
     for path, text in outputs.items():
         if args.check:
             if not path.is_file() or path.read_text(encoding="utf-8") != text:
-                stale.append(path.name)
+                stale.append(str(path.relative_to(ROOT)))
         else:
+            path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(text, encoding="utf-8")
-            print(f"wrote {path.name}")
+            print(f"wrote {path.relative_to(ROOT)}")
     if args.check:
         if stale:
             print("stale: " + ", ".join(stale) + " (run python3 scripts/build.py)", file=sys.stderr)
